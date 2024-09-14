@@ -55,34 +55,6 @@ CREATE TABLE "DetailtambahstokTb" (
 );
 
 -- CreateTable
-CREATE TABLE "TransaksiTB" (
-    "id" SERIAL NOT NULL,
-    "nofaktur" TEXT NOT NULL,
-    "tanggal" TIMESTAMP(3) NOT NULL,
-    "kasir" TEXT NOT NULL,
-    "totalItem" INTEGER NOT NULL,
-    "totalBayar" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "TransaksiTB_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "DetailTransaksiTb" (
-    "id" SERIAL NOT NULL,
-    "barangId" INTEGER NOT NULL,
-    "transaksiId" INTEGER NOT NULL,
-    "hargaModal" INTEGER NOT NULL,
-    "hargaJual" INTEGER NOT NULL,
-    "qty" INTEGER NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "DetailTransaksiTb_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "KaryawanTb" (
     "id" SERIAL NOT NULL,
     "nama" TEXT NOT NULL,
@@ -91,6 +63,7 @@ CREATE TABLE "KaryawanTb" (
     "alamat" TEXT NOT NULL,
     "hp" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "foto" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -115,9 +88,11 @@ CREATE TABLE "PenjualanTb" (
     "id" SERIAL NOT NULL,
     "nofaktur" TEXT NOT NULL,
     "tanggal" TIMESTAMP(3) NOT NULL,
-    "kasir" TEXT NOT NULL,
+    "karyawanId" INTEGER NOT NULL,
     "totalItem" INTEGER NOT NULL,
     "totalBayar" INTEGER NOT NULL,
+    "jumlahUang" INTEGER NOT NULL,
+    "kembalian" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -138,11 +113,69 @@ CREATE TABLE "DetailPenjualanTb" (
     CONSTRAINT "DetailPenjualanTb_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "BarangTb_kodeBarang_key" ON "BarangTb"("kodeBarang");
+-- CreateTable
+CREATE TABLE "ServisTb" (
+    "id" SERIAL NOT NULL,
+    "kodeServis" TEXT NOT NULL,
+    "tanggal" TIMESTAMP(3) NOT NULL,
+    "nama" TEXT NOT NULL,
+    "alamat" TEXT NOT NULL,
+    "hp" TEXT NOT NULL,
+    "namaBarang" TEXT NOT NULL,
+    "noSeri" TEXT NOT NULL,
+    "perlengkapan" TEXT NOT NULL,
+    "jenis" TEXT NOT NULL,
+    "detailSoftware" TEXT NOT NULL,
+    "detailHardware" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "karyawanId" INTEGER NOT NULL,
+    "biayaSoftware" INTEGER,
+    "biayaHardware" INTEGER,
+    "biayaCancel" INTEGER,
+    "keterangan" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ServisTb_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "logloginTb" (
+    "id" SERIAL NOT NULL,
+    "karyawanId" INTEGER NOT NULL,
+    "tanggal" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "logloginTb_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "LogkaryawanTb" (
+    "id" SERIAL NOT NULL,
+    "karyawanId" INTEGER NOT NULL,
+    "nama" TEXT NOT NULL,
+    "hp" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "tanggal" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "LogkaryawanTb_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "LogbarangTb" (
+    "id" SERIAL NOT NULL,
+    "barangId" INTEGER NOT NULL,
+    "kodeBarang" TEXT NOT NULL,
+    "nama" TEXT NOT NULL,
+    "status" TEXT NOT NULL,
+    "tanggal" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" INTEGER NOT NULL,
+
+    CONSTRAINT "LogbarangTb_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateIndex
-CREATE UNIQUE INDEX "TransaksiTB_nofaktur_key" ON "TransaksiTB"("nofaktur");
+CREATE UNIQUE INDEX "BarangTb_kodeBarang_key" ON "BarangTb"("kodeBarang");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "KaryawanTb_hp_key" ON "KaryawanTb"("hp");
@@ -169,16 +202,25 @@ ALTER TABLE "DetailtambahstokTb" ADD CONSTRAINT "DetailtambahstokTb_barangId_fke
 ALTER TABLE "DetailtambahstokTb" ADD CONSTRAINT "DetailtambahstokTb_tambahstokId_fkey" FOREIGN KEY ("tambahstokId") REFERENCES "TambahstokTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DetailTransaksiTb" ADD CONSTRAINT "DetailTransaksiTb_barangId_fkey" FOREIGN KEY ("barangId") REFERENCES "BarangTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "DetailTransaksiTb" ADD CONSTRAINT "DetailTransaksiTb_transaksiId_fkey" FOREIGN KEY ("transaksiId") REFERENCES "TransaksiTB"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "UserTb" ADD CONSTRAINT "UserTb_karyawanId_fkey" FOREIGN KEY ("karyawanId") REFERENCES "KaryawanTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "PenjualanTb" ADD CONSTRAINT "PenjualanTb_karyawanId_fkey" FOREIGN KEY ("karyawanId") REFERENCES "KaryawanTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DetailPenjualanTb" ADD CONSTRAINT "DetailPenjualanTb_barangId_fkey" FOREIGN KEY ("barangId") REFERENCES "BarangTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DetailPenjualanTb" ADD CONSTRAINT "DetailPenjualanTb_penjualanId_fkey" FOREIGN KEY ("penjualanId") REFERENCES "PenjualanTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ServisTb" ADD CONSTRAINT "ServisTb_karyawanId_fkey" FOREIGN KEY ("karyawanId") REFERENCES "KaryawanTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "logloginTb" ADD CONSTRAINT "logloginTb_karyawanId_fkey" FOREIGN KEY ("karyawanId") REFERENCES "KaryawanTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LogkaryawanTb" ADD CONSTRAINT "LogkaryawanTb_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "LogbarangTb" ADD CONSTRAINT "LogbarangTb_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserTb"("id") ON DELETE CASCADE ON UPDATE CASCADE;

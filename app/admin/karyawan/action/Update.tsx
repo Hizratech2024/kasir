@@ -11,7 +11,7 @@ import Select from 'react-select'
 import { StyleSelect } from "@/app/helper";
 
 const options = [
-    { value: 'Admin', label: 'Admin' },
+    // { value: 'Admin', label: 'Admin' },
     { value: 'Kasir', label: 'Kasir' },
     { value: 'Teknisi', label: 'Teknisi' },
 ];
@@ -58,12 +58,14 @@ function Update({ karyawan, user, reload }: { karyawan: KaryawanTb, user: UserTb
 
     const [show, setShow] = useState(false)
 
+    const handleShow = () => setShow(true)
+
     const handleClose = () => {
         setShow(false);
         refreshform()
     }
 
-    const handleShow = () => setShow(true)
+    
 
     const handleChange = (selectedOption: any) => {
         setSelectjabatan(selectedOption);

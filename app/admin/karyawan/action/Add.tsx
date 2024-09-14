@@ -7,7 +7,7 @@ import Select from 'react-select'
 import { StyleSelect, tanggalHariIni } from "@/app/helper";
 
 const options = [
-    { value: 'Admin', label: 'Admin' },
+    // { value: 'Admin', label: 'Admin' },
     { value: 'Kasir', label: 'Kasir' },
     { value: 'Teknisi', label: 'Teknisi' },
 ];

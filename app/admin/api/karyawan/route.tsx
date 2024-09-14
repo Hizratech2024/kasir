@@ -53,13 +53,34 @@ export const POST = async (request: Request) => {
 }
 
 export const GET = async () => {
-    const kategori = await prisma.karyawanTb.findMany({
-        orderBy:{
-            id:'asc'
+    const karyawan = await prisma.karyawanTb.findMany({
+
+        orderBy: {
+            id: 'asc'
         },
-        include:{
-            UserTb:true,
+        include: {
+            UserTb: true,
+        },
+        where: {
+            NOT: {
+                OR: [
+                    {
+                        UserTb: {
+                            status: "Admin",
+                        },
+                    },
+                    {
+                        UserTb: {
+                            status: "Superadmin",
+                        },
+                    }
+
+                ]
+
+
+            }
         }
+        
     });
-    return NextResponse.json(kategori, { status: 200 })
+    return NextResponse.json(karyawan, { status: 200 })
 }

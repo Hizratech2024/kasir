@@ -55,9 +55,7 @@ function Delete({ karyawanid, reload }: { karyawanid: Number, reload: Function }
                     <button type="button" className="btn btn-warning light" onClick={handleClose}>Close</button>
                     <button type="button" className="btn btn-danger light" onClick={() => handleDelete(Number(karyawanid))}>Ya, Hapus</button>
                 </Modal.Footer>
-
             </Modal>
-
         </div>
     )
 }

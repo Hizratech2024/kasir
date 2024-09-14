@@ -20,3 +20,5 @@ export const GET = async (request: NextRequest) => {
   });
   return NextResponse.json(karyawan, { status: 200 })
 }
+
+

@@ -41,7 +41,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-
+  if (pathname.startsWith("/superadmin")) {
+    if (token?.status !== "Superadmin") {
+      const url = new URL('/', request.url);
+      return NextResponse.redirect(url);
+    }
+  }
 
   if (pathname.startsWith("/admin")) {
     if (token?.status !== "Admin") {
